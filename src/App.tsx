@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import WellbeingCheckIn from './widgets/WellbeingCheckIn';
+import AppointmentScheduler from './widgets/AppointmentScheduler';
 
-function App() {
+const App: React.FC = () => {
+  // State to manage which widget to show
+  const [selectedWidget, setSelectedWidget] = useState<string>('none');
+
+  // Function to handle link clicks
+  const handleLinkClick = (widget: string) => {
+    setSelectedWidget(widget);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {/* Links to select the widget */}
+      <div className="link-container">
+        <a href="#" className="link" onClick={() => handleLinkClick('wellbeing')}>Show Wellbeing Widget</a>
+        <a href="#" className="link" onClick={() => handleLinkClick('appointment')}>Show Appointment Scheduler</a>
+      </div>
+
+      {/* Conditionally render widgets based on selected state */}
+      {selectedWidget === 'wellbeing' && <WellbeingCheckIn />}
+      {selectedWidget === 'appointment' && <AppointmentScheduler />}
     </div>
   );
 }

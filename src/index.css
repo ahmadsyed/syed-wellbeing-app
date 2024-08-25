@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.link-container {
+  text-align: center; 
+  margin: 20px 0; 
+}
+
+.link {
+  text-decoration: none; 
+  color: #007bff; 
+  font-size: 1.2rem; 
+  margin: 0 15px; 
+}
+
+.link:hover {
+  color: #0056b3; 
+  text-decoration: underline; 
+}
+.custom-toast-container {
+  position: fixed;
+  top: 50px; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+}
