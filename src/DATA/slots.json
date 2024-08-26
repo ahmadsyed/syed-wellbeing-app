@@ -8,13 +8,6 @@
   },
   {
     "displayDate": "2024/08/02",
-    "displayTime": "08:00AM",
-    "displayTimeEnd": "08:30AM",
-    "startTimeUtc": 1722565800,
-    "endTimeUtc": 1722567600
-  },
-  {
-    "displayDate": "2024/08/02",
     "displayTime": "08:30AM",
     "displayTimeEnd": "09:00AM",
     "startTimeUtc": 1722567600,
@@ -117,13 +110,6 @@
     "displayTimeEnd": "10:00AM",
     "startTimeUtc": 1723780800,
     "endTimeUtc": 1723782600
-  },
-  {
-    "displayDate": "2024/08/16",
-    "displayTime": "10:00AM",
-    "displayTimeEnd": "10:30AM",
-    "startTimeUtc": 1723782600,
-    "endTimeUtc": 1723784400
   },
   {
     "displayDate": "2024/08/19",
@@ -236,19 +222,5 @@
     "displayTimeEnd": "09:30AM",
     "startTimeUtc": 1724643000,
     "endTimeUtc": 1724644800
-  },
-  {
-    "displayDate": "2024/08/26",
-    "displayTime": "09:30AM",
-    "displayTimeEnd": "10:00AM",
-    "startTimeUtc": 1724644800,
-    "endTimeUtc": 1724646600
-  },
-  {
-    "displayDate": "2024/08/26",
-    "displayTime": "10:00AM",
-    "displayTimeEnd": "10:30AM",
-    "startTimeUtc": 1724646600,
-    "endTimeUtc": 1724648400
   }
 ]

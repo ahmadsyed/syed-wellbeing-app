@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import data from '../DATA/data'; // Adjust the path as needed
-import { CSSProperties } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col, Button, Card, Toast } from 'react-bootstrap';
 
 interface TimeSlot {
     displayDate: string;
@@ -15,6 +16,8 @@ const AppointmentScheduler: React.FC = () => {
     const [dates, setDates] = useState<string[]>([]);
     const [selectedDate, setSelectedDate] = useState<string>('');
     const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
+    const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
+    const [showToast, setShowToast] = useState(false);
 
     // Reference for the scrollable container
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -23,120 +26,123 @@ const AppointmentScheduler: React.FC = () => {
     useEffect(() => {
         const uniqueDates = Array.from(new Set(data.map(item => item.displayDate)));
         setDates(uniqueDates);
+        if (uniqueDates.length > 0) {
+            setSelectedDate(uniqueDates[0]);
+        }
     }, []);
 
     // Filter time slots based on the selected date
     useEffect(() => {
-        const filteredSlots = data.filter(item => item.displayDate === selectedDate);
-        setTimeSlots(filteredSlots);
+        if (selectedDate) {
+            const filteredSlots = data.filter(item => item.displayDate === selectedDate);
+            setTimeSlots(filteredSlots);
+            setSelectedSlot(null);
+        }
     }, [selectedDate]);
 
     // Scroll the container to the left
     const scrollLeft = () => {
         if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: -100, behavior: 'smooth' });
+            console.log('Scrolling left');
+            scrollContainerRef.current.scrollLeft -= 100;
         }
     };
 
     // Scroll the container to the right
     const scrollRight = () => {
         if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: 100, behavior: 'smooth' });
+            console.log('Scrolling right');
+            scrollContainerRef.current.scrollLeft += 100;
         }
+    };
+    //Will select a slot from the list and show toast
+    const handleSlotClick = (slot: TimeSlot) => {
+        setSelectedSlot(slot);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000);
     };
 
     return (
-        <div style={styles.card}>
-            {/* Date selector with horizontal scroll */}
-            <div style={styles.dateSelector}>
-                <button onClick={scrollLeft} style={styles.scrollButton}>◀</button>
-                <div ref={scrollContainerRef} style={styles.scrollContainer}>
-                    {dates.map(date => (
-                        <div
-                            key={date}
-                            style={styles.dateCard}
-                            onClick={() => setSelectedDate(date)}
-                        >
-                            {date}
-                        </div>
-                    ))}
-                </div>
-                <button onClick={scrollRight} style={styles.scrollButton}>▶</button>
-            </div>
+        <Container className="my-4">
+            <Card className="shadow-sm p-3 mb-5 bg-white rounded" style={{ width: '60%', margin: 'auto' }}>
+                <Card.Body>
+                    <Row className="align-items-center mb-3">
+                        <Col xs="auto">
+                            <Col xs="auto">
+                                <Button variant="primary" onClick={scrollLeft} style={{ backgroundColor: '#b6b6b6', borderRadius: '50%', padding: '0.5rem' }}>
+                                    <i className="bi bi-arrow-left" style={{ color: 'black' }}></i>
+                                </Button>
+                            </Col>
+                        </Col>
+                        <Col xs className="overflow-auto" style={{ maxWidth: '100%', whiteSpace: 'nowrap' }} data-testid="scroll-bar">
+                            <div ref={scrollContainerRef} className="d-inline-flex" style={{ overflowX: 'auto', scrollBehavior: 'smooth', width: '100%' }}>
+                                {dates.map(date => {
+                                    const dateObject = new Date(date);
+                                    const dayName = dateObject.toLocaleDateString('en-US', { weekday: 'short' });
+                                    return (
+                                        <div
+                                            key={date}
+                                            className={`d-inline-flex flex-column align-items-center p-3 mx-1 border rounded cursor-pointer ${selectedDate === date ? 'bg-primary text-white' : ''}`}
+                                            onClick={() => setSelectedDate(date)}
+                                            style={{ minWidth: '75px' }}
+                                        >
+                                            <div>{date.split('/')[2]}</div>
+                                            <div>{dayName}</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </Col>
+                        <Col xs="auto">
+                            <Button variant="primary" onClick={scrollRight} style={{ backgroundColor: '#b6b6b6', borderRadius: '50%', padding: '0.5rem' }}>
+                                <i className="bi bi-arrow-right"></i>
+                            </Button>
+                        </Col>
+                    </Row>
 
-            {/* Display time slots for the selected date */}
-            {selectedDate && (
-                <div style={styles.timeSlotContainer}>
-                    <h3>Available Time Slots for {selectedDate}</h3>
-                    {timeSlots.length > 0 ? (
-                        <ul style={styles.timeSlotList}>
-                            {timeSlots.map(slot => (
-                                <li key={slot.startTimeUtc} style={styles.timeSlotItem}>
-                                    {slot.displayTime} - {slot.displayTimeEnd}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No available time slots.</p>
-                    )}
-                </div>
-            )}
-        </div>
+                    <div className="mt-4">
+                        <h4>Available Time Slots</h4>
+                        <p style={{color:'#b9b9b9'}}>Each session lasts for 30 minutes</p>
+
+                        {selectedDate && (
+                            <div className="d-flex flex-wrap" data-testid="time-slot-container">
+                                {timeSlots.length > 0 ? (
+                                    timeSlots.map(slot => (
+                                        <Card
+                                            key={slot.startTimeUtc}
+                                            className={`m-2 ${selectedSlot === slot ? 'border-primary' : 'border'}`}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleSlotClick(slot)}
+                                            data-testid={`time-slot-${slot.displayTime}`}
+                                        >
+                                            <Card.Body>
+                                                {slot.displayTime}
+                                            </Card.Body>
+                                        </Card>
+                                    ))
+                                ) : (
+                                    <Card className="m-2">
+                                        <Card.Body>No available time slots.</Card.Body>
+                                    </Card>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </Card.Body>
+            </Card>
+
+            <Toast
+                show={showToast}
+                onClose={() => setShowToast(false)}
+                bg="info"
+                className="position-fixed bottom-0 end-0 m-3"
+            >
+                <Toast.Body data-testid="toast-message">
+                    You selected: {selectedSlot?.displayTime}
+                </Toast.Body>
+            </Toast>
+        </Container>
     );
-};
-
-// Styles for the component with correct typing
-const styles: { [key: string]: CSSProperties } = {
-    card: {
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        padding: '16px',
-        width: '100%',
-        maxWidth: '600px',
-        margin: 'auto',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    },
-    dateSelector: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '16px',
-    },
-    scrollButton: {
-        background: '#007bff',
-        border: 'none',
-        color: 'white',
-        padding: '8px',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '16px',
-        margin: '0 8px',
-    },
-    scrollContainer: {
-        overflowX: 'auto',
-        whiteSpace: 'nowrap',
-        flexGrow: 1,
-        display: 'flex',
-    },
-    dateCard: {
-        display: 'inline-block',
-        padding: '8px 16px',
-        margin: '0 4px',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        cursor: 'pointer',
-    },
-    timeSlotContainer: {
-        marginTop: '16px',
-    },
-    timeSlotList: {
-        listStyle: 'none',
-        padding: '0',
-        margin: '0',
-    },
-    timeSlotItem: {
-        padding: '8px 0',
-        borderBottom: '1px solid #eee',
-    },
 };
 
 export default AppointmentScheduler;

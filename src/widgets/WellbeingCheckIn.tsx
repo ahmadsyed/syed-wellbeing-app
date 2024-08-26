@@ -15,20 +15,24 @@ const feelings: Feeling[] = [
 
 // Mapping colors for toast notifications
 const toastColors: { [key: string]: string } = {
-  Terrible: "#f8d7da", // light red
-  Bad: "#fff3cd", // light yellow
-  Alright: "#e2e3e5", // light gray
-  "Pretty Good": "#d1ecf1", // light blue
-  Fantastic: "#d4edda" // light green
+  Terrible: "#f8d7da", 
+  Bad: "#fff3cd", 
+  Alright: "#e2e3e5", 
+  "Pretty Good": "#d1ecf1",
+  Fantastic: "#d4edda" 
 };
+interface Props {
+  onExit: () => void;
+}
 
-const WellbeingCheckIn: React.FC = () => {
+const WellbeingCheckIn: React.FC<Props> = ({onExit}) => {
   const [selectedFeeling, setSelectedFeeling] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
-    /**
-     * Handle the Continue button click
-     * If a feeling is selected, show the toast notification
-    */
+
+  /**
+   * Handle the Continue button click
+   * If a feeling is selected, show the toast notification
+   */
   const handleContinue = () => {
     if (selectedFeeling) {
       setShowToast(true);
@@ -46,14 +50,14 @@ const WellbeingCheckIn: React.FC = () => {
           <i
             className="bi bi-arrow-left position-absolute top-0 start-0 m-3"
             style={{ fontSize: '1.5rem', cursor: 'pointer' }}
-            onClick={() => console.log('Back button clicked')}
+            onClick={() => onExit()}
             aria-label="Back button"  
           ></i>
           {/* Close Icon */}
           <i
             className="bi bi-x-lg position-absolute top-0 end-0 m-3"
             style={{ fontSize: '1.5rem', cursor: 'pointer' }}
-            onClick={() => console.log('Close button clicked')}
+            onClick={() => onExit()}
             aria-label="Close button"  
           ></i>
 
@@ -62,16 +66,16 @@ const WellbeingCheckIn: React.FC = () => {
 
           <Row className="justify-content-center">
             {feelings.map((feeling, index) => (
-              <Col key={index} xs={6} sm={4} md={2} className="mb-3">
+              <Col key={index} xs={6} sm={4} md={2} className="mb-3 d-flex justify-content-center">
                 <Card
                   role="button"
-                  className={`text-center ${selectedFeeling === feeling.label ? `border-${feeling.color}` : ""}`}
+                  className={`text-center feeling-card ${selectedFeeling === feeling.label ? `border-${feeling.color}` : ""}`}
                   onClick={() => setSelectedFeeling(feeling.label)}
                   style={{ cursor: 'pointer' }}
                 >
-                  <Card.Body className='p-2'>
-                    <h1>{feeling.emoji}</h1>
-                    <p>{feeling.label}</p>
+                  <Card.Body className="p-2 d-flex flex-column align-items-center">
+                    <h1 className="m-0">{feeling.emoji}</h1>
+                    <p className="m-0">{feeling.label}</p>
                   </Card.Body>
                 </Card>
               </Col>

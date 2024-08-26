@@ -4,7 +4,7 @@ import AppointmentScheduler from './widgets/AppointmentScheduler';
 
 const App: React.FC = () => {
   // State to manage which widget to show
-  const [selectedWidget, setSelectedWidget] = useState<string>('none');
+  const [selectedWidget, setSelectedWidget] = useState<string | null>(null);
 
   // Function to handle link clicks
   const handleLinkClick = (widget: string) => {
@@ -20,7 +20,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Conditionally render widgets based on selected state */}
-      {selectedWidget === 'wellbeing' && <WellbeingCheckIn />}
+      {selectedWidget === 'wellbeing' && <WellbeingCheckIn onExit={ () => setSelectedWidget(null)} />}
       {selectedWidget === 'appointment' && <AppointmentScheduler />}
     </div>
   );

@@ -35,3 +35,21 @@ code {
   transform: translateX(-50%);
   z-index: 1050;
 }
+.feeling-card {
+  width: 120px; 
+  height: 120px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.feeling-card p {
+  font-size: 0.9rem; 
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
