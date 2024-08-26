@@ -50,7 +50,8 @@ This will start the development server and open the application in your default 
     ```npm test```
 
 ## Example Test
-```test('AppointmentScheduler Component selects a time slot and shows a toast', () => {
+```
+test('AppointmentScheduler Component selects a time slot and shows a toast', () => {
   render(<AppointmentScheduler />);
 
   // Click on the 09:00 AM time slot
